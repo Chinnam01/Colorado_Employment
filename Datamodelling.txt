@@ -1,0 +1,75 @@
+#Lakshmi Deepika Chinnam
+#Importing Libraries
+import pymongo
+import sqlite3
+from pymongo import MongoClient
+
+count = 0
+
+#Connecting Atlas for Data download 
+
+Client = pymongo.MongoClient("mongodb+srv://Deepu :"+urllib.parse.quote_plus("Deepu@0112")+"@deepu.9iqc0u4.mongodb.net/?retryWrites=true&w=majority")
+db = client["Deepu"]
+
+#Data to local 
+
+collection = db["Deepu_list"]
+G = collection.find({})   
+delete_db = db.collection.delete_many({})
+count = 0
+
+#connecting to database
+
+con = sqlite3.connect('Deepu.sqlite')
+print("Database Initialized and opened ")
+
+#initiating the cursor
+
+cursor = con.cursor()
+cursor.execute('Drop Table If Exists employee')
+cursor.execute('''Create Table If Not Exists employee(areaname TEXT, areatype REAL, areatyname TEXT, 
+area REAL, statename TEXT, stfips REAL, periodyear INT, periodtype REAL, period REAL, estab INT, avgemp INT, 
+totwage INT, indcode INT, codetitle TEXT)''')
+
+
+# loop to load data in dictionary
+for employee in G:
+    
+        areaname = str(employee["areaname"])
+        areatype = float(employee["areatype"])
+        areatyname = str(employee["areatyname"])
+        area = float(employee["area"])
+        statename = str(employee["statename"])
+        stfips = float(employee["stfips"])
+        periodyear = int (employee["periodyear"])
+        periodtype = float(employee["periodtype"])
+        period = float(employee["period"])
+        estab = int(employee["estab"])
+        avgemp = int(employee["avgemp"])
+        totwage = int(employee["totwage"])
+        indcode = int(employee["indcode"])
+        codetitle = str(employee["codetitle"])
+        
+        
+        cursor.execute("insert into employee VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+(employee['areaname'], employee['areatype'], employee['areatyname'], employee['area'], employee['statename'], 
+employee['stfips'], employee['periodyear'], employee['periodtype'], employee['period'], employee['estab'], employee['avgemp'], employee['totwage'], employee['indcode'], employee['codetitle']))
+        
+print("Total Records printed ", con.total_changes)
+        
+    
+# Initialising the count of the values
+count = count + 1
+if count == 1:
+    print("Records capturing started")
+if count % 100 == 0:
+    print(count, "Records printed into DB.")
+
+cursor.execute("SELECT * FROM employee")
+for m in cursor:
+    print(m)
+    
+#Exit the cursor 
+con.commit()
+con.close()
+        

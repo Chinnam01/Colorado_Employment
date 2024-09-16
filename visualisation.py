@@ -1,0 +1,56 @@
+#Lakshmi Deepika Chinnam
+# #importing statements to use sqlite3, pandas, numpy and matplotlib
+from cProfile import label
+import sqlite3
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+#establishing connection to the database
+conn= sqlite3.connect('index.sqlite')
+cur= conn.cursor()
+cur.execute( "select * from lobbylist")
+data= []
+table=cur.fetchall()
+for itr in table:
+    data.append(itr)
+df=pd.DataFrane(data)
+
+
+df.columns= ['Id', 'StateName','AreaName','Area', 'IndCode', 'IndustryType', 'ownership', 'NumOfemp', 'Totalwages', 'Avgwages']
+print("The Sum of Number of Employees", df['NumOfemp'].sum())
+print("The Mean of Number of Employees", df['Numofemp'].mean())
+print("The Standard Deviation of Number of Employees", df['NumOfemp'].std())
+print("The variance of Number of Employees, df['NumOfemp'],var()")
+print("--------------------------------------------------------------")
+
+print("The Sum of Total wages",df['Totalwages'].sum())
+print("The Mean of Total wages",df['Totalwages'].mean())
+print("The Standard Deviation of Total Wages" ,df['Totalwages'].std( ))
+print("The variance of Average Wages",df['Avgwages']. var())
+
+plt.plot(x_values, y_values, linestyle='solid', color='pink', marker='o', markerfacecolor='yellow', markersize=7)
+
+# Axis labels and title
+plt.xlabel('YEAR')
+plt.ylabel('Total No. Of Employees')
+plt.legend(loc="upper left")
+plt.title('NO.Of Employees v/sYear')
+plt.savefig('EmplOyee vs year.png')
+plt.show()
+
+# Scatter Plot
+plt.scatter(x_values, y_values, color='pink', marker='o', s=50)
+plt.xlabel('YEAR')
+plt.ylabel('Total No. Of Employees')
+plt.title('Scatter Plot: NO. Of Employees v/s Year')
+plt.savefig('scatter_plot.png')
+plt.show()
+
+# Bar Graph
+plt.bar(x_values, y_values, color='pink')
+plt.xlabel('YEAR')
+plt.ylabel('Total No. Of Employees')
+plt.title('Bar Graph: NO. Of Employees v/s Year')
+plt.savefig('bar_graph.png')
+plt.show()
